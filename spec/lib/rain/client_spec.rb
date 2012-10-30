@@ -21,4 +21,30 @@ describe Rain::Client do
       subject.add("url").should eq("An error has occurred when adding the torrent: #{error}.")
     end
   end
+
+  context 'listing the torrents' do
+    it 'lists the existing ones' do
+      transmissionAdapter.stub(:list).and_return([{
+        id: 3,
+        name: "first",
+        percent_done: 10,
+        total_size: 30,
+        download_speed: 20
+      }, {
+        id: 5,
+        name: "second",
+        percent_done: 100,
+        total_size: 40,
+        download_speed: 0
+      }])
+
+      subject.list.should eq("The following torrents are being downloaded:\n3 - first, 10% done of 30 bytes. Downloading at 20 bytes per second.\n5 - second, 100% done of 40 bytes.")
+    end
+
+    it 'displays a message when no torrents exist' do
+      transmissionAdapter.stub(:list).and_return([])
+
+      subject.list.should eq("There are no torrents being downloaded.")
+    end
+  end
 end
