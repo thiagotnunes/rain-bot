@@ -11,15 +11,14 @@ describe Rain::Client do
     it 'adds successfully' do
       transmissionAdapter.stub(:add).with("url").and_return(true)
 
-      subject.add("url").should be_true
+      subject.add("url").should eq("url was successfully added.")
     end
 
     it 'adds unsuccessfully' do
-      transmissionAdapter.stub(:add).with("url").and_raise(IndexError.new)
+      error = IndexError.new
+      transmissionAdapter.stub(:add).with("url").and_raise(error)
 
-      expect {
-        subject.add("url")
-      }.to raise_error(IndexError)
+      subject.add("url").should eq("An error has occurred when adding the torrent: #{error}.")
     end
   end
 end
