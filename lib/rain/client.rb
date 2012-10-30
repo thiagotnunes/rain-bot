@@ -4,13 +4,6 @@ module Rain
       @transmission = transmission
     end
 
-    def add(url)
-      @transmission.add(url)
-      "#{url} was successfully added."
-    rescue Exception => e
-      "An error has occurred when adding the torrent: #{e}."
-    end
-
     def list
       torrents = @transmission.list
       if torrents.empty?
@@ -21,6 +14,20 @@ module Rain
           description_for(t)
         end.join("\n")
       end
+    end
+
+    def add(url)
+      @transmission.add(url)
+      "#{url} was successfully added."
+    rescue Exception => e
+      "An error has occurred when adding the torrent: #{e}."
+    end
+
+    def remove(id)
+      @transmission.remove(id)
+      "Torrent with id #{id} was successfully removed."
+    rescue Exception => e
+      "An error has occurred when removing the torrent: #{e}"
     end
 
     private

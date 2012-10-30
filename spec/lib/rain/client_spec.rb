@@ -47,4 +47,19 @@ describe Rain::Client do
       subject.list.should eq("There are no torrents being downloaded.")
     end
   end
+
+  context 'removing torrents' do
+    it 'removes successfully' do
+      transmissionAdapter.should_receive(:remove).with(3)
+
+      subject.remove(3).should eq("Torrent with id 3 was successfully removed.")
+    end
+
+    it 'removes unsuccessfully' do
+      error = IndexError
+      transmissionAdapter.stub(:remove).and_raise(error)
+
+      subject.remove(3).should eq("An error has occurred when removing the torrent: #{error}")
+    end
+  end
 end
