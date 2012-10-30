@@ -5,9 +5,8 @@ module Rain
     end
 
     def add(url)
-      if @transmission.add(url)
-        "#{url} was successfully added."
-      end
+      @transmission.add(url)
+      "#{url} was successfully added."
     rescue Exception => e
       "An error has occurred when adding the torrent: #{e}."
     end

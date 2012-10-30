@@ -9,7 +9,7 @@ describe Rain::Client do
 
   context 'adding a new torrent' do
     it 'adds successfully' do
-      transmissionAdapter.stub(:add).with("url").and_return(true)
+      transmissionAdapter.should_receive(:add).with("url")
 
       subject.add("url").should eq("url was successfully added.")
     end
