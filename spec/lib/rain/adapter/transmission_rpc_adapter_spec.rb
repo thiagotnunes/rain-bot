@@ -65,4 +65,15 @@ describe Rain::Adapter::TransmissionRpcAdapter do
     end
   end
 
+  it 'removes a torrent' do
+    to_be_removed = Transmission::RPC::Torrent.new({ "id" =>  3 })
+    Transmission.stub(:torrents).and_return([
+      Transmission::RPC::Torrent.new({ "id" => 1 }),
+      Transmission::RPC::Torrent.new({ "id" => 2 }),
+      to_be_removed
+    ])
+    to_be_removed.should_receive(:delete!)
+
+    subject.remove(3)
+  end
 end

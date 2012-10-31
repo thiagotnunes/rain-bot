@@ -22,6 +22,12 @@ module Rain
           raise TorrentOperationException
         end
       end
+
+      def remove(id)
+        Transmission.torrents.find do |t|
+          t.id == id 
+        end.delete!
+      end
     end
   end
 end
