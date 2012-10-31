@@ -1,3 +1,5 @@
+require 'transmission-rpc'
+
 module Rain
   class TorrentOperationException < ::StandardError
   end
@@ -5,7 +7,7 @@ module Rain
   module Adapter
     class TransmissionRpcAdapter
       def list
-        Transmission.torrents.map do |t|
+        ::Transmission.torrents.map do |t|
           {
             id: t.id,
             name: t.name,
@@ -17,7 +19,7 @@ module Rain
       end
 
       def add(url)
-        result = Transmission::RPC::Torrent + url 
+        result = ::Transmission::RPC::Torrent + url 
         if result == nil
           raise TorrentOperationException
         end
@@ -38,7 +40,7 @@ module Rain
       private
 
       def perform_on(id, &block)
-        block.call(Transmission.torrents.find { |t| t.id == id })
+        block.call(::Transmission.torrents.find { |t| t.id == id })
       end
     end
   end
