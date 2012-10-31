@@ -28,6 +28,12 @@ module Rain
       end
     end
 
+    def start(id)
+      torrent_operation("Torrent with id #{id} has been started.") do
+        @transmission.start(id)
+      end
+    end
+
     private
 
     def description_for(t)

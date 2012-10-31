@@ -4,6 +4,7 @@ class TransmissionAdapter
 end
 
 describe Rain::Client do
+  let(:error) { IndexError }
   let(:transmissionAdapter) { TransmissionAdapter.new }
   subject { Rain::Client.new(transmissionAdapter) }
 
@@ -15,7 +16,6 @@ describe Rain::Client do
     end
 
     it 'adds unsuccessfully' do
-      error = IndexError.new
       transmissionAdapter.stub(:add).with("url").and_raise(error)
 
       subject.add("url").should eq("An error has occurred when performing the operation: #{error}.")
@@ -56,10 +56,23 @@ describe Rain::Client do
     end
 
     it 'removes unsuccessfully' do
-      error = IndexError
       transmissionAdapter.stub(:remove).and_raise(error)
 
       subject.remove(3).should eq("An error has occurred when performing the operation: #{error}.")
+    end
+  end
+
+  context 'starting torrents' do
+    it 'starts successfully' do
+      transmissionAdapter.should_receive(:start).with(3)
+
+      subject.start(3).should eq("Torrent with id 3 has been started.")
+    end
+
+    it 'starts unsuccessfully' do
+      transmissionAdapter.stub(:start).and_raise(error)
+
+      subject.start(3).should eq("An error has occurred when performing the operation: #{error}.")
     end
   end
 end
