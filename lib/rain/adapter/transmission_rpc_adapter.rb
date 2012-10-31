@@ -31,6 +31,10 @@ module Rain
         perform_on(id) { |t| t.start! }
       end
 
+      def stop(id)
+        perform_on(id) { |t| t.stop! }
+      end
+
       private
 
       def perform_on(id, &block)

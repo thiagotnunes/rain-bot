@@ -49,7 +49,11 @@ describe Rain::Adapter::TransmissionRpcAdapter do
 
   it 'starts a torrent' do
     perform_on(3, :start, :start!)
- end
+  end
+
+  it 'stops a torrent' do
+    perform_on(3, :stop, :stop!)
+  end
 
   private
 
