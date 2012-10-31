@@ -8,20 +8,6 @@ describe Rain::Client do
   let(:transmissionAdapter) { TransmissionAdapter.new }
   subject { Rain::Client.new(transmissionAdapter) }
 
-  context 'adding a new torrent' do
-    it 'adds successfully' do
-      transmissionAdapter.should_receive(:add).with("url")
-
-      subject.add("url").should eq("url was successfully added.")
-    end
-
-    it 'adds unsuccessfully' do
-      transmissionAdapter.stub(:add).with("url").and_raise(error)
-
-      subject.add("url").should eq("An error has occurred when performing the operation: #{error}.")
-    end
-  end
-
   context 'listing the torrents' do
     it 'lists the existing ones' do
       transmissionAdapter.stub(:list).and_return([{
@@ -48,6 +34,18 @@ describe Rain::Client do
     end
   end
 
+  context 'adding a new torrent' do
+    it 'adds successfully' do
+      transmissionAdapter.should_receive(:add).with("url")
+
+      subject.add("url").should eq("url was successfully added.")
+    end
+
+    it 'adds unsuccessfully' do
+      check_error_handling_stubbing(:add) { subject.add("url") }
+    end
+  end
+
   context 'removing torrents' do
     it 'removes successfully' do
       transmissionAdapter.should_receive(:remove).with(3)
@@ -56,9 +54,7 @@ describe Rain::Client do
     end
 
     it 'removes unsuccessfully' do
-      transmissionAdapter.stub(:remove).and_raise(error)
-
-      subject.remove(3).should eq("An error has occurred when performing the operation: #{error}.")
+      check_error_handling_stubbing(:remove) { subject.remove(3) }
     end
   end
 
@@ -70,9 +66,13 @@ describe Rain::Client do
     end
 
     it 'starts unsuccessfully' do
-      transmissionAdapter.stub(:start).and_raise(error)
-
-      subject.start(3).should eq("An error has occurred when performing the operation: #{error}.")
+      check_error_handling_stubbing(:start) { subject.start(3) }
     end
+  end
+
+  def check_error_handling_stubbing(method)
+    transmissionAdapter.stub(method).and_raise(error)
+
+    yield.should eq("An error has occurred when performing the operation: #{error}.")
   end
 end
