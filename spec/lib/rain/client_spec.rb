@@ -18,7 +18,7 @@ describe Rain::Client do
       error = IndexError.new
       transmissionAdapter.stub(:add).with("url").and_raise(error)
 
-      subject.add("url").should eq("An error has occurred when adding the torrent: #{error}.")
+      subject.add("url").should eq("An error has occurred when performing the operation: #{error}.")
     end
   end
 
@@ -59,7 +59,7 @@ describe Rain::Client do
       error = IndexError
       transmissionAdapter.stub(:remove).and_raise(error)
 
-      subject.remove(3).should eq("An error has occurred when removing the torrent: #{error}")
+      subject.remove(3).should eq("An error has occurred when performing the operation: #{error}.")
     end
   end
 end

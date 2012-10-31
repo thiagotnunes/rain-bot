@@ -17,17 +17,15 @@ module Rain
     end
 
     def add(url)
-      @transmission.add(url)
-      "#{url} was successfully added."
-    rescue Exception => e
-      "An error has occurred when adding the torrent: #{e}."
+      torrent_operation("#{url} was successfully added.") do
+        @transmission.add(url)
+      end
     end
 
     def remove(id)
-      @transmission.remove(id)
-      "Torrent with id #{id} was successfully removed."
-    rescue Exception => e
-      "An error has occurred when removing the torrent: #{e}"
+      torrent_operation("Torrent with id #{id} was successfully removed.") do
+        @transmission.remove(id)
+      end
     end
 
     private
@@ -36,6 +34,13 @@ module Rain
       description = "#{t[:id]} - #{t[:name]}, #{t[:percent_done]}% done of #{t[:total_size]} bytes."
       description += " Downloading at #{t[:download_speed]} bytes per second." unless t[:percent_done] == 100
       description
+    end
+
+    def torrent_operation(success_message)
+      yield
+      success_message
+    rescue Exception => e
+      "An error has occurred when performing the operation: #{e}."
     end
   end
 end
