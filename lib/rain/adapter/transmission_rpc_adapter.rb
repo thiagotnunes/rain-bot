@@ -24,9 +24,17 @@ module Rain
       end
 
       def remove(id)
-        Transmission.torrents.find do |t|
-          t.id == id 
-        end.delete!
+        perform_on(id) { |t| t.delete! }
+      end
+
+      def start(id)
+        perform_on(id) { |t| t.start! }
+      end
+
+      private
+
+      def perform_on(id, &block)
+        block.call(Transmission.torrents.find { |t| t.id == id })
       end
     end
   end

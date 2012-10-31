@@ -76,4 +76,16 @@ describe Rain::Adapter::TransmissionRpcAdapter do
 
     subject.remove(3)
   end
+
+  it 'starts a torrent' do
+    to_be_started = Transmission::RPC::Torrent.new({ "id" =>  3 })
+    Transmission.stub(:torrents).and_return([
+      Transmission::RPC::Torrent.new({ "id" => 1 }),
+      Transmission::RPC::Torrent.new({ "id" => 2 }),
+      to_be_started
+    ])
+    to_be_started.should_receive(:start!)
+
+    subject.start(3)
+  end
 end
