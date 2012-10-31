@@ -34,6 +34,12 @@ module Rain
       end
     end
 
+    def stop(id)
+      torrent_operation("Torrent with id #{id} has been stopped.") do
+        @transmission.stop(id)
+      end
+    end
+
     private
 
     def description_for(t)

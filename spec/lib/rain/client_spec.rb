@@ -70,6 +70,18 @@ describe Rain::Client do
     end
   end
 
+  context 'stopping torrents' do
+    it 'stops successfully' do
+      transmissionAdapter.should_receive(:stop).with(3)
+
+      subject.stop(3).should eq("Torrent with id 3 has been stopped.")
+    end
+
+    it 'stops unsuccessfully' do
+      check_error_handling_stubbing(:stop) { subject.stop(3) }
+    end
+  end
+
   def check_error_handling_stubbing(method)
     transmissionAdapter.stub(method).and_raise(error)
 
