@@ -4,13 +4,13 @@ module Rain
   module Bot
     class Torrent
       include ::Cinch::Plugin
-
       match "list", method: :list
+      match /^add (.*)$/, method: :add
+
       def list(m)
         m.reply client.list
       end
 
-      match /^add (.*)$/, method: :add
       def add(m, url)
         m.reply client.add url
       end
