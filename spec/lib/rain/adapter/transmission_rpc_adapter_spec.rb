@@ -4,50 +4,28 @@ describe Rain::Adapter::TransmissionRpcAdapter do
   subject { Rain::Adapter::TransmissionRpcAdapter.new }
 
   it 'lists all the torrents' do
-    Transmission.stub(:torrents).and_return([
-      Transmission::RPC::Torrent.new({
-        "id" => 10,
-        "name" => "first",
-        "percentDone" => 20,
-        "totalSize" => 1024,
-        "rateDownload" => 30,
-        "addedDate" => Date.new,
-        "comment" => "no comments",
-        "eta" => 10,
-        "leftUntilDone" => 30,
-        "torrentFile" => "torrent",
-        "hashString" => "4328092fhdskhfsk",
-        "status" => 4
-      }),
-      Transmission::RPC::Torrent.new({
-        "id" => 20,
-        "name" => "second",
-        "percentDone" => 30,
-        "totalSize" => 2048,
-        "rateDownload" => 5,
-        "addedDate" => Date.new,
-        "comment" => "no comments",
-        "eta" => 10,
-        "leftUntilDone" => 30,
-        "torrentFile" => "torrent",
-        "hashString" => "4328092fhdskhfsk",
-        "status" => 4
-      })
-    ])
+    Transmission.stub(:torrents).and_return(torrent_list)
 
     subject.list.should == [{
-      id: 10,
+      id: 1,
       name: "first",
-      percent_done: 20,
-      total_size: 1024,
-      download_speed: 30
+      percent_done: 10,
+      total_size: 100,
+      download_speed: 1000
     },
     {
-      id: 20,
+      id: 2,
       name: "second",
+      percent_done: 20,
+      total_size: 200,
+      download_speed: 2000
+    },
+    {
+      id: 3,
+      name: "third",
       percent_done: 30,
-      total_size: 2048,
-      download_speed: 5
+      total_size: 300,
+      download_speed: 3000
     }]
   end
 
@@ -66,26 +44,66 @@ describe Rain::Adapter::TransmissionRpcAdapter do
   end
 
   it 'removes a torrent' do
-    to_be_removed = Transmission::RPC::Torrent.new({ "id" =>  3 })
-    Transmission.stub(:torrents).and_return([
-      Transmission::RPC::Torrent.new({ "id" => 1 }),
-      Transmission::RPC::Torrent.new({ "id" => 2 }),
-      to_be_removed
-    ])
-    to_be_removed.should_receive(:delete!)
-
-    subject.remove(3)
+    perform_on(3, :remove, :delete!)
   end
 
   it 'starts a torrent' do
-    to_be_started = Transmission::RPC::Torrent.new({ "id" =>  3 })
-    Transmission.stub(:torrents).and_return([
-      Transmission::RPC::Torrent.new({ "id" => 1 }),
-      Transmission::RPC::Torrent.new({ "id" => 2 }),
-      to_be_started
-    ])
-    to_be_started.should_receive(:start!)
+    perform_on(3, :start, :start!)
+ end
 
-    subject.start(3)
+  private
+
+  def perform_on(id, method, adapter_method)
+    torrents = torrent_list
+    Transmission.stub(:torrents).and_return(torrents)
+    torrents.find { |t| t.id == id }.should_receive(adapter_method)
+
+    subject.send(method, id)
+  end
+
+  def torrent_list
+      [Transmission::RPC::Torrent.new({
+        "id" => 1,
+        "name" => "first",
+        "percentDone" => 10,
+        "totalSize" => 100,
+        "rateDownload" => 1000,
+        "addedDate" => Date.new,
+        "comment" => "no comments",
+        "eta" => 10,
+        "leftUntilDone" => 30,
+        "torrentFile" => "torrent",
+        "hashString" => "4328092fhdskhfsk",
+        "status" => 4
+      }),
+      Transmission::RPC::Torrent.new({
+        "id" => 2,
+        "name" => "second",
+        "percentDone" => 20,
+        "totalSize" => 200,
+        "rateDownload" => 2000,
+        "addedDate" => Date.new,
+        "comment" => "no comments",
+        "eta" => 10,
+        "leftUntilDone" => 30,
+        "torrentFile" => "torrent",
+        "hashString" => "4328092fhdskhfsk",
+        "status" => 4
+      }),
+      Transmission::RPC::Torrent.new({
+        "id" => 3,
+        "name" => "third",
+        "percentDone" => 30,
+        "totalSize" => 300,
+        "rateDownload" => 3000,
+        "addedDate" => Date.new,
+        "comment" => "no comments",
+        "eta" => 10,
+        "leftUntilDone" => 30,
+        "torrentFile" => "torrent",
+        "hashString" => "4328092fhdskhfsk",
+        "status" => 4
+      })
+    ]
   end
 end
