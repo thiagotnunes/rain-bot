@@ -1,4 +1,7 @@
 module Rain
+  class TorrentOperationException < ::StandardError
+  end
+
   module Adapter
     class TransmissionRpcAdapter
       def list
@@ -10,6 +13,13 @@ module Rain
             total_size: t.total_size,
             download_speed: t.download_speed
           }
+        end
+      end
+
+      def add(url)
+        result = Transmission::RPC::Torrent + url 
+        if result == nil
+          raise TorrentOperationException
         end
       end
     end

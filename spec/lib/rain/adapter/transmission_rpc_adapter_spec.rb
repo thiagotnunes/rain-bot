@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Rain::Adapter::TransmissionRpcAdapter do
+  subject { Rain::Adapter::TransmissionRpcAdapter.new }
+
   it 'lists all the torrents' do
     Transmission.stub(:torrents).and_return([
       Transmission::RPC::Torrent.new({
@@ -32,9 +34,8 @@ describe Rain::Adapter::TransmissionRpcAdapter do
         "status" => 4
       })
     ])
-    adapter = Rain::Adapter::TransmissionRpcAdapter.new
 
-    adapter.list.should == [{
+    subject.list.should == [{
       id: 10,
       name: "first",
       percent_done: 20,
@@ -49,4 +50,19 @@ describe Rain::Adapter::TransmissionRpcAdapter do
       download_speed: 5
     }]
   end
+
+  context "adding a torrent" do
+    it 'adds a torrent' do
+      Transmission::RPC::Torrent.should_receive(:+).with("url").and_return(3)
+
+      subject.add("url")
+    end
+
+    it 'throws an exception when could not add the torrent' do
+      Transmission::RPC::Torrent.should_receive(:+).with("url").and_return(nil)
+
+      expect { subject.add("url") }.to raise_error(Rain::TorrentOperationException)
+    end
+  end
+
 end
