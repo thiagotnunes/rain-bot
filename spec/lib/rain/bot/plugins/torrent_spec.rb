@@ -15,7 +15,7 @@ describe Rain::Bot::Torrent do
     Rain::Bot::Torrent.new(bot) 
   end
 
-  it 'should list the available torrents' do
+  it 'lists the available torrents' do
     client.stub(:list).and_return("this is the list")
 
     message.should_receive(:reply).with("this is the list")
@@ -23,11 +23,35 @@ describe Rain::Bot::Torrent do
     subject.list(message)
   end
 
-  it 'should add a torrent' do
-    client.stub(:add).with("url").and_return("added successfully")
+  it 'adds a torrent' do
+    client.stub(:add).with("url").and_return("added")
 
-    message.should_receive(:reply).with("added successfully")
+    message.should_receive(:reply).with("added")
 
     subject.add(message, "url")
+  end
+
+  it 'removes a torrent' do
+    client.stub(:remove).with(3).and_return("removed")
+
+    message.should_receive(:reply).with("removed")
+
+    subject.remove(message, 3)
+  end
+
+  it 'starts a torrent' do
+    client.stub(:start).with(3).and_return("started")
+
+    message.should_receive(:reply).with("started")
+
+    subject.start(message, 3)
+  end
+
+  it 'stops a torrent' do
+    client.stub(:stop).with(3).and_return("stopped")
+
+    message.should_receive(:reply).with("stopped")
+
+    subject.stop(message, 3)
   end
 end
