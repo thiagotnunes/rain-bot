@@ -23,18 +23,18 @@ $ !list
 
 Will list out the current torrents being downloaded, and provide the id for all of these.
 
-$ !add <torrent url>
+$ !add (torrent url)
 
 Adds a new torrent to transmission using the provided torrent url.
 
-$ !remove <torrent id>
+$ !remove (torrent id)
 
 Removes the torrent with the given id.
 
-$ !start <torrent id>
+$ !start (torrent id)
 
 Starts the torrent with the given id.
 
-$ !stop <torrent id>
+$ !stop (torrent id)
 
 Stops the torrent with the given id.
