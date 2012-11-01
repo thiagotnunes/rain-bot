@@ -1,0 +1,5 @@
+irc:
+  server: irc.freenode.org
+  nick: bot
+  password: password
+  channels: "##cinch-bots"
