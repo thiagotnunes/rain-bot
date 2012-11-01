@@ -1,4 +1,4 @@
-require 'spec_helper'
+  require 'spec_helper'
 
 describe Rain::Adapter::TransmissionRpcAdapter do
   subject { Rain::Adapter::TransmissionRpcAdapter.new }
@@ -39,7 +39,7 @@ describe Rain::Adapter::TransmissionRpcAdapter do
     it 'throws an exception when could not add the torrent' do
       Transmission::RPC::Torrent.should_receive(:+).with("url").and_return(nil)
 
-      expect { subject.add("url") }.to raise_error(Rain::TorrentOperationException)
+      expect { subject.add("url") }.to raise_error(Rain::TorrentOperationError)
     end
   end
 

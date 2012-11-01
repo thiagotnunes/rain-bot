@@ -1,9 +1,6 @@
 require 'transmission-rpc'
 
 module Rain
-  class TorrentOperationException < ::StandardError
-  end
-
   module Adapter
     class TransmissionRpcAdapter
       def list
@@ -21,7 +18,7 @@ module Rain
       def add(url)
         result = ::Transmission::RPC::Torrent + url 
         if result == nil
-          raise TorrentOperationException
+          raise Rain::TorrentOperationError
         end
       end
 
